@@ -31,8 +31,8 @@ def make_summary(query,pois,langs,countries,start):
     hashtags = {}
     mentions = {}
     lines = query
-    url1 = 'http://3.144.30.130:8983/solr/'
-    url2 = '/select?&defType=edismax&qf=text_en^7&qf=text_hi^4&qf=text_es^2&q.op=OR&q='
+    url1 = 'http://3.135.204.148:8983/solr/'
+    url2 = '/select?&defType=edismax&facet.field=tweet_lang&facet.field=country&facet.field=sentiment&facet=true&qf=text_en^7&qf=text_hi^4&qf=text_es^2&q.op=OR&q='
     url3 = '&wt=json&indent=true&rows=10&start=' + start
     models = ["IR_Project4"]
     lang1 = "text_en%3A"
