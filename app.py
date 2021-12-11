@@ -2,7 +2,7 @@ import operator
 import requests
 import json
 import urllib
-from flask import request,Response
+from flask import request,Response,send_from_directory 
 from flask_cors import CORS, cross_origin
 try:
     import urllib.request as urllib2
