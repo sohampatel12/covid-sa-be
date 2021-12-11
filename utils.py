@@ -1,6 +1,10 @@
 import json
 import urllib.request
+import urllib.parse
 
+
+space = ' '
+spaceParse = urllib.parse.quote(space)
 
 
 def get_replies(tweet_id, base_url):
@@ -42,6 +46,42 @@ def get_replies(tweet_id, base_url):
 
 
     return replies
+
+
+def find_negative_tweets(base_url):
+    '''
+    Finding negative tweets off a list of negative keywords
+    Find all tweets based on those keywords, storing them in a keyword-pair
+    and saving in file
+    '''
+    neg_terms = ['abolishbigpharma','VaccineInjuries','NoVaccineMandates','VaccineFailure','NoForcedFlushots','antivaccine','NoForcedVaccines','ArrestBillGates','notomandatoryvaccines','betweenmeandmydoctor','NoVaccine','bigpharmafia','NoVaccineForMe','bigpharmakills','novaccinemandates','BillGatesBioTerrorist','parentalrights','billgatesevil','parentsoverpharma','BillGatesIsEvil','saynotovaccines','billgatesisnotadoctor','stopmandatoryvaccination','billgatesvaccine','syringeslaughter','cdcfraud','unvaccinated','cdctruth','vvglobaldemo','cdcwhistleblower','vaccinationchoice','covidvaccineispoison','VaccineAgenda','depopulation','vaccinedamage','DoctorsSpeakUp','vaccinefailure','educatebuvax','vaccinefraud','exposebillgates','vaccineharm','forcedvaccines','vaccineinjuries','Fuckvaccines','vaccineinjury','idonotconsent','VaccinesAreNotTheAnswer','informedconsent','vaccinesarepoison','learntherisk','vaccinescause','medicalfreedom','vaccineskill','medicalfreedomofchoice','vaxxed','momsofunvaccinatedchildren','yeht','mybodymychoice','antivax','CrimeaAainsTHumanity','Antivaxxers','arrestbillgates',"VaccineDeaths","Iwillnotcomply","VaccineInjured","NoToVaccinePassport","VaccineSideEffects","NoCompulsoryVaccines","JustSayNo", "MedicalGenocide","VaccineForGenocide","BillGatesBioTerrorist","depopulation","COVIDHOAX", "CrimesAgainstHumanity"]
+
+    negative_tweets = {}
+
+    for t in neg_terms:
+
+        # txt='hashtags%3A'+t+'%0Atweet_text%3A'+t+'%0Areply_text%3A'+t
+        txt1 = 'hashtags%3A'+t+spaceParse+'or'+spaceParse+'tweet_text%3A'+t+spaceParse+'or'+spaceParse+'reply_text%3A'+t
+        # parsed = urllib.parse.quote_plus(txt)
+        # print (parsed)
+        # space = ' '
+        # spaceParse = urllib.parse.quote(space)
+        url = 'http://'+AWS_IP+':8983/solr/'+'IR_Project4'+'/select?&q='+txt1+'&wt=json&indent=true&rows=400'
+        #   url = 'http://'+AWS_IP+':8983/solr/'+core_name+'/select?q=text_en%3A'+parsed+spaceParse+'or'+ \
+        #           spaceParse+'text_de%3A'+parsed+spaceParse+'or'+spaceParse+'text_ru%3A'+parsed+ \
+        #           '&fl=id%2Cscore&wt=json&indent=true&rows=20'
+        print (f'URL: {url}')
+        data = urllib.request.urlopen(url)
+        docs = json.load(data)['response']['docs']
+        print (type(docs))
+        print (t)
+        if len(docs) == 0:
+            continue
+        else:
+            negative_tweets[t] = docs
+
+    with open('negative_tweets.json', 'w') as b:
+        json.dump(negative_tweets, b)
 
 
 
