@@ -77,7 +77,7 @@ def get_replies(tweet_id, base_url):
 
     query = 'replied_to_tweet_id%3A'+ str(tweet_id)
 
-    url = base_url + '/IR_Project4' + '/select?&q='+query+'&wt=json&indent=true'
+    url = base_url + '/IR_Final1' + '/select?&q='+query+'&wt=json&indent=true'
     # print (f'URL: {url}')
     data = urllib.request.urlopen(url)
     docs = json.load(data)['response']['docs']
@@ -116,7 +116,7 @@ def find_negative_tweets(base_url):
         # print (parsed)
         # space = ' '
         # spaceParse = urllib.parse.quote(space)
-        url = 'http://'+AWS_IP+':8983/solr/'+'IR_Project4'+'/select?&q='+txt1+'&wt=json&indent=true&rows=400'
+        url = 'http://'+AWS_IP+':8983/solr/'+'IR_Final1'+'/select?&q='+txt1+'&wt=json&indent=true&rows=400'
         #   url = 'http://'+AWS_IP+':8983/solr/'+core_name+'/select?q=text_en%3A'+parsed+spaceParse+'or'+ \
         #           spaceParse+'text_de%3A'+parsed+spaceParse+'or'+spaceParse+'text_ru%3A'+parsed+ \
         #           '&fl=id%2Cscore&wt=json&indent=true&rows=20'
