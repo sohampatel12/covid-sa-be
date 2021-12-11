@@ -1,10 +1,55 @@
 import json
 import urllib.request
 import urllib.parse
+import matplotlib.pyplot as plt
+from wordcloud import WordCloud, STOPWORDS
 
 
-space = ' '
-spaceParse = urllib.parse.quote(space)
+
+# aws_url = 'http://3.19.211.16:8983/solr'
+
+
+
+
+def get_wordcloud(tweet_docs):
+    '''
+    Input: Takes in json/dict obj of tweets
+    Output: Returnswordcloud IMG in path
+    '''
+    # f = open('negative_tweets.json',mode='r')
+    # tweet_docs = json.load(f)
+    full_str = ''
+    if isinstance(tweet_docs, dict):
+        for t in tweet_docs.keys():
+            for tt in tweet_docs[t]:
+                if 'text_en' in tt.keys():
+                    full_str += tt['text_en'] + ' '
+                elif 'text_hi' in tt.keys():
+                    full_str += tt['text_hi'] + ' '
+                elif 'text_es' in tt.keys():
+                    full_str += tt['text_es'] + ' '
+    
+    elif isinstance(tweet_docs, list):
+        for t in tweet_docs:
+            if 'text_en' in t.keys():
+                full_str += t['text_en'] + ' '
+
+            elif 'text_hi' in t.keys():
+                full_str += t['text_hi'] + ' '
+            elif 'text_es' in t.keys():
+                full_str += t['text_es'] + ' '
+    
+    full_str = full_str[:-1]
+    
+    stopwords = set(STOPWORDS)
+    wordcloud = WordCloud(width=1600,
+    stopwords=stopwords,height=800,max_font_size=200,max_words=50,collocations=False, background_color='black').generate(full_str)
+    plt.figure(figsize=(40,30))
+    plt.imshow(wordcloud, interpolation="bilinear")
+    plt.axis("off")
+    plt.savefig('wordcloud.png')
+
+
 
 
 def get_replies(tweet_id, base_url):
@@ -22,6 +67,8 @@ def get_replies(tweet_id, base_url):
     }
 
     '''
+
+    
     replies = {}
     replies['reply_list'] = []
     replies['positive'] = 0
@@ -54,6 +101,9 @@ def find_negative_tweets(base_url):
     Find all tweets based on those keywords, storing them in a keyword-pair
     and saving in file
     '''
+    space = ' '
+    spaceParse = urllib.parse.quote(space)
+
     neg_terms = ['abolishbigpharma','VaccineInjuries','NoVaccineMandates','VaccineFailure','NoForcedFlushots','antivaccine','NoForcedVaccines','ArrestBillGates','notomandatoryvaccines','betweenmeandmydoctor','NoVaccine','bigpharmafia','NoVaccineForMe','bigpharmakills','novaccinemandates','BillGatesBioTerrorist','parentalrights','billgatesevil','parentsoverpharma','BillGatesIsEvil','saynotovaccines','billgatesisnotadoctor','stopmandatoryvaccination','billgatesvaccine','syringeslaughter','cdcfraud','unvaccinated','cdctruth','vvglobaldemo','cdcwhistleblower','vaccinationchoice','covidvaccineispoison','VaccineAgenda','depopulation','vaccinedamage','DoctorsSpeakUp','vaccinefailure','educatebuvax','vaccinefraud','exposebillgates','vaccineharm','forcedvaccines','vaccineinjuries','Fuckvaccines','vaccineinjury','idonotconsent','VaccinesAreNotTheAnswer','informedconsent','vaccinesarepoison','learntherisk','vaccinescause','medicalfreedom','vaccineskill','medicalfreedomofchoice','vaxxed','momsofunvaccinatedchildren','yeht','mybodymychoice','antivax','CrimeaAainsTHumanity','Antivaxxers','arrestbillgates',"VaccineDeaths","Iwillnotcomply","VaccineInjured","NoToVaccinePassport","VaccineSideEffects","NoCompulsoryVaccines","JustSayNo", "MedicalGenocide","VaccineForGenocide","BillGatesBioTerrorist","depopulation","COVIDHOAX", "CrimesAgainstHumanity"]
 
     negative_tweets = {}
