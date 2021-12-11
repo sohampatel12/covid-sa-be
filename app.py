@@ -12,9 +12,13 @@ except ImportError:
 
 from flask import Flask, jsonify
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='', static_folder='frontend/build')
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
+
+@app.route("/", defaults={'path':''})
+def serve(path):
+    return send_from_directory(app.static_folder,'index.html')
 
 def get_url_by_field(x,y):
     url = ""
@@ -99,8 +103,12 @@ def my_microservice():
     k = make_summary(query, pois,langs,countries,start)
     return json.dumps(k,ensure_ascii=False, indent=4,sort_keys=True)
 
-if __name__ == '__main__':
-    app.config['RESTFUL_JSON'] = {
-        'ensure_ascii': True
-    }
-    app.run(host="0.0.0.0", port=9999, debug=True)
+@app.route('/test', methods=['GET'])
+def test():
+    return "TEST"
+
+# if __name__ == '__main__':
+#     app.config['RESTFUL_JSON'] = {
+#         'ensure_ascii': True
+#     }
+#     app.run(host="0.0.0.0", port=9999, debug=True)
