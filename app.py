@@ -92,12 +92,14 @@ def my_microservice():
     return json.dumps(k,ensure_ascii=False, indent=4,sort_keys=True)
 
 
-# if __name__ == '__main__':
-#     app.config['RESTFUL_JSON'] = {
-#         'ensure_ascii': True
-#     }
-#     app.run(host="0.0.0.0", port=9999, debug=True)
-
 @app.route('/test', methods=['GET'])
 def test():
     return "TEST"
+
+
+if __name__ == '__main__':
+    app.config['RESTFUL_JSON'] = {
+        'ensure_ascii': True
+    }
+    app.run(host="0.0.0.0", port=5000, debug=True)
+
