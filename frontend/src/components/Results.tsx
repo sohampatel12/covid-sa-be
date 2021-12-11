@@ -40,7 +40,12 @@ export default function Results(props: any) {
 
     const date = new Date(item.tweet_date);
     const dateString = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
-    var parts = item.tweet_text.split(" ");
+    var parts;
+    if (item.tweet_text) {
+      parts = item.tweet_text.split(" ");
+    } else {
+      parts = item.reply_text.split(" ");
+    }
     const country = item.country;
 
     for (let i = 0; i < parts.length; i++) {
