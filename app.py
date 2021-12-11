@@ -12,9 +12,13 @@ except ImportError:
 
 from flask import Flask, jsonify
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='', static_folder='frontend/build')
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
+
+@app.route("/", defaults={'path':''})
+def serve(path):
+    return send_from_directory(app.static_folder,'index.html')
 
 def get_url_by_field(x,y):
     url = ""
