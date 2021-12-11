@@ -91,8 +91,23 @@ def get_replies(tweet_id, base_url):
         elif d['sentiment'] == -1:
             replies['negative'] += 1
 
-
-    return replies
+    reply = {}
+    reply['replies'] = replies['reply_list']
+    reply['count'] = []
+    obj = {}
+    obj['name'] = 'Positive'
+    obj['value'] = replies['positive']
+    reply['count'].append(obj)
+    obj = {}
+    obj['name'] = 'Negative'
+    obj['value'] = replies['negative']
+    reply['count'].append(obj)
+    obj = {}
+    obj['name'] = 'Neutral'
+    obj['value'] = replies['neutral']
+    reply['count'].append(obj)
+    
+    return reply
 
 
 def find_negative_tweets(base_url):
@@ -174,7 +189,14 @@ def country_distribution(query_result):
         else:
             country[d['country'].lower()] += 1
 
-    return country
+    finCountry = []
+    for k in country.keys():
+        obj = {}
+        obj['name'] = k
+        obj['value'] = country[k]
+        finCountry.append(obj)
+
+    return finCountry
 
 
 def poi_with_sentiment(query_result):
@@ -234,6 +256,25 @@ def popular_hashtags_mentions(query_result, k):
 
     ### Returned is a two-tuple list like this below
     ## [('COVID19', 496), ('VaccinEquity', 155), ('SecretGala11', 136), ('CrisLu25N', 123)]
+    hashList = []
+    mentList = []
 
-    return hash_srtd, ment_srtd
+    for i in range(len(hash_srtd)):
+        obj = {}
+        
+        obj['name'] = hash_srtd[i][0]
+        obj['value'] = hash_srtd[i][1]
+
+        hashList.append(obj)
+    
+    for i in range(len(ment_srtd)):
+        obj = {}
+        
+        obj['name'] = ment_srtd[i][0]
+        obj['value'] = ment_srtd[i][1]
+
+        mentList.append(obj)
+
+
+    return hashList, mentList
 
