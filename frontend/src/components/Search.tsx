@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Autocomplete, Box, Button, CircularProgress, Grid, Pagination, TextField, Toolbar, Typography } from '@mui/material';
+import { Alert, Autocomplete, Box, Button, CircularProgress, Grid, Pagination, TextField, Toolbar, Typography } from '@mui/material';
 import Results from './Results';
 import Analytics from './Analytics';
 
@@ -10,6 +10,10 @@ export default function Search(props: any) {
   const [data, setData] = React.useState<any | undefined>();
   const [spinner, setSpinner] = React.useState(false);
   const [page, setPage] = React.useState(1);
+  const [error, setError] = React.useState({
+    show: false,
+    message: ""
+  });
 
   const sample: any[] = [];
 
@@ -19,37 +23,64 @@ export default function Search(props: any) {
 
     setData(undefined);
     setSpinner(true);
+    setError({ ...error, show: false });
 
     if (!inputValue) {
       setSpinner(false);
       console.log("Enter some details");
     } else {
-      const url = new URL("http://localhost:9999/api");
-      url.searchParams.append("query", inputValue);
-      url.searchParams.append("start", start ? start : "0");
+      const url = new URL("http://localhost:5000/api");
+      const headers = {
+        'Content-Type': 'application/json'
+      }
       const body = {
         "query": inputValue,
         "start": start ? start.toString() : "0",
-        "pois": [],
-        "countries": [],
-        "languages": []
+        "pois": Array(),
+        "countries": Array(),
+        "languages": Array()
       }
+      createRequestBody(body);
+
       fetch(url.toString(), {
         method: 'POST',
         mode: 'cors',
         redirect: 'follow',
-        body: JSON.stringify(body)
+        body: JSON.stringify(body),
+        headers: headers
       })
         .then(response => response.json())
         .then(result => {
           setData(result);
         })
         .catch(error => {
-          console.log('error', error);
+          setError({
+            show: true,
+            message: error.toString()
+          });
+          console.log(error);
         })
         .finally(() => {
           setSpinner(false);
         });
+    }
+  }
+
+  const createRequestBody = (body: any) => {
+    for (let key in props.languages) {
+      if (props.languages[key]) {
+        body.languages.push(key)
+      }
+    }
+    for (let key in props.countries) {
+      if (props.countries[key]) {
+        body.countries.push(key)
+      }
+    }
+    for (let key in props.pois) {
+      if (props.pois[key]) {
+        body.pois.push(key)
+      }
     }
   }
 
@@ -83,6 +114,18 @@ export default function Search(props: any) {
     }
   }
 
+  const renderError = () => {
+    if (error.show) {
+      return (
+        <Alert sx={{ mx: 2 }} severity="error">{error.message}</Alert>
+      )
+    } else {
+      return (
+        <div></div>
+      )
+    }
+  }
+
   const renderResults = () => {
     if (data) {
       return (
@@ -95,16 +138,21 @@ export default function Search(props: any) {
               showLastButton
               color="primary"
               page={page}
-              onChange={handlePageChange} 
-              sx={{ marginLeft: "25%", marginTop: "24px" }}/>
+              onChange={handlePageChange}
+              sx={{ marginLeft: "25%", marginTop: "24px" }} />
           </Grid>
           <Grid item padding={2} xs={6} sx={{ bgcolor: "primary.disabled" }}>
-            <Analytics data={data}></Analytics>
+            <Analytics
+              language={data.lang}
+              country={data.country}
+              hashtags={data.hashtags}
+              mentions={data.mentions}
+            ></Analytics>
           </Grid>
         </Grid>
 
       );
-    } else if (!spinner && !data) {
+    } else if (!spinner && !data && !error.show) {
       return (
         <Grid container xs={12}>
           <Typography padding={2}>Begin search to see results.</Typography>
@@ -123,9 +171,6 @@ export default function Search(props: any) {
             id="combo-box-demo"
             options={sample}
             onKeyDown={handleKeyDown}
-            // onChange={(event: any, newValue: string | null) => {
-            //   setValue(newValue);
-            // }}
             onInputChange={(event, newInputValue) => {
               setInputValue(newInputValue);
             }}
@@ -139,6 +184,7 @@ export default function Search(props: any) {
           </Button>
         </Grid>
         <Grid item padding={2} xs={6.5}></Grid>
+        {renderError()}
         {renderResults()}
       </Grid>
       {showProgress()}
