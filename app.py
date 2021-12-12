@@ -2,8 +2,10 @@ import operator
 import requests
 import json
 import urllib
+import re
 from flask import request,Response,send_from_directory
 from flask_cors import CORS, cross_origin
+from googletrans import Translator
 try:
     import urllib.request as urllib2
 except ImportError:
@@ -28,11 +30,48 @@ def get_url_by_field(x,y):
     n = urllib.parse.quote(url)
     return n[:len(n) - 8]
 
-def make_summary(query,pois,langs,countries,sentiment,start):
-    hashtags = {}
-    mentions = {}
-    lines = query
+def eng_tokenizer(text):
+    hashtags = []
+    pattern = re.compile(r'\s+')
+    text = re.sub(pattern, ' ', text)
+    for i in text.strip().split(' '):
+        if i[0] == '#':
+            hashtags.append(i)
+    # text = text.lower()
+    pattern = re.compile(r'[^\w\s-]+')
+    text = re.sub(pattern, '', text)
+    words = text.strip().split()
+    # print(words)
+    updated_text = ' '.join(words)
+    return updated_text, hashtags
 
+def hin_span_tokenizer(text):
+    hashtags = []
+    a = text.strip().split()
+    updated_text = ""
+    for i in a:
+        if i[0] == '#':
+            hashtags.append(i)
+            b = i.replace('#', '')
+            updated_text = text.replace(i, b)
+    if updated_text == "":
+        updated_text = text
+    lis = updated_text.strip().split()
+    updated = ' '.join(lis)
+    return updated, hashtags
+
+
+def make_summary(query,pois,langs,countries,sentiment,start):
+    try:
+        translator = Translator()
+        lang = translator.detect(query).lang
+    except:
+        lang = "en"
+    if lang == "en":
+        query, hashtags = eng_tokenizer(query)
+    else:
+        query, hashtags = hin_span_tokenizer(query)
+    lines = query
     url2 = '/select?&defType=edismax&facet.field=tweet_lang&facet.field=country&facet.field=sentiment&facet.field=hashtags&facet=true&'
     if len(pois) > 0:
         url2 += "fq=" + get_url_by_field(pois, "poi_name") + "&"
@@ -42,17 +81,28 @@ def make_summary(query,pois,langs,countries,sentiment,start):
         url2 += "fq=" + get_url_by_field(countries, "country") + "&"
     if len(sentiment) > 0:
         url2 += "fq=" + get_url_by_field(sentiment, "sentiment") + "&"
-    url2 += 'qf=text_en^1&qf=all^3&q.op=OR&q='
+    url2 += 'qf=text_en^1&'
     url3 = '&wt=json&indent=true&rows=10&start=' + start
+    if len(hashtags) > 0:
+        url2 += 'qf=hashtags^3&q.op=OR&q='
+        lang2 = "hashtags%3A"
+    else:
+        url2 += 'qf=all^3&q.op=OR&q='
+        lang2 = "all%3A"
     models = ["IR_Final1"]
     lang1 = "text_en%3A"
     # lang2 = "text_text%3A"
-    lang2 = "all%3A"
     # lang3 = "text_hi%3A"
     OR = "%20or%20"
     for model in models:
         line = str(lines)
-        inurl = SOLR_BASE_URL + model + url2 + lang1 + line + OR + lang2 + line + url3
+        inurl = SOLR_BASE_URL + model + url2 + lang1 + line
+        if len(hashtags) > 0:
+            for h in hashtags:
+                inurl += OR + lang2 + urllib.parse.quote(h[1:])
+            inurl += url3
+        else:
+            inurl = SOLR_BASE_URL + model + url2 + lang1 + line + OR + lang2 + urllib.parse.quote(line) + url3
         print(inurl)
         data = json.loads(requests.get(inurl).text)
     data = fetch_counts(data)
