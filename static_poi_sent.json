@@ -1,0 +1,202 @@
+{
+    "myogiadityanath": {
+        "Positive": 173,
+        "Negative": 279,
+        "Neutral": 134
+    },
+    "ArvindKejriwal": {
+        "Positive": 417,
+        "Negative": 248,
+        "Neutral": 264
+    },
+    "rashtrapatibhvn": {
+        "Positive": 75,
+        "Negative": 22,
+        "Neutral": 0
+    },
+    "JoeBiden": {
+        "Positive": 820,
+        "Negative": 195,
+        "Neutral": 136
+    },
+    "BarackObama": {
+        "Positive": 666,
+        "Negative": 41,
+        "Neutral": 44
+    },
+    "HHSGov": {
+        "Positive": 478,
+        "Negative": 79,
+        "Neutral": 85
+    },
+    "HillaryClinton": {
+        "Positive": 607,
+        "Negative": 165,
+        "Neutral": 73
+    },
+    "MoHFW_INDIA": {
+        "Positive": 431,
+        "Negative": 290,
+        "Neutral": 141
+    },
+    "PMOIndia": {
+        "Positive": 303,
+        "Negative": 69,
+        "Neutral": 374
+    },
+    "POTUS": {
+        "Positive": 1144,
+        "Negative": 259,
+        "Neutral": 93
+    },
+    "CDCgov": {
+        "Positive": 803,
+        "Negative": 507,
+        "Neutral": 299
+    },
+    "ShashiTharoor": {
+        "Positive": 861,
+        "Negative": 225,
+        "Neutral": 94
+    },
+    "": {
+        "Positive": 1638,
+        "Negative": 1622,
+        "Neutral": 442
+    },
+    "GobiernoMX": {
+        "Positive": 58,
+        "Negative": 778,
+        "Neutral": 147
+    },
+    "alfredodelmazo": {
+        "Positive": 107,
+        "Negative": 589,
+        "Neutral": 279
+    },
+    "EnriqueAlfaroR": {
+        "Positive": 32,
+        "Negative": 135,
+        "Neutral": 5
+    },
+    "narendramodi": {
+        "Positive": 1246,
+        "Negative": 104,
+        "Neutral": 257
+    },
+    "lopezobrador_": {
+        "Positive": 181,
+        "Negative": 638,
+        "Neutral": 261
+    },
+    "SSalud_mx": {
+        "Positive": 184,
+        "Negative": 1555,
+        "Neutral": 161
+    },
+    "AmitShah": {
+        "Positive": 361,
+        "Negative": 150,
+        "Neutral": 452
+    },
+    "KamalaHarris": {
+        "Positive": 547,
+        "Negative": 87,
+        "Neutral": 54
+    },
+    "Jaime_BonillaV": {
+        "Positive": 147,
+        "Negative": 723,
+        "Neutral": 92
+    },
+    "Claudiashein": {
+        "Positive": 323,
+        "Negative": 518,
+        "Neutral": 95
+    },
+    "SSaludCdMx": {
+        "Positive": 46,
+        "Negative": 475,
+        "Neutral": 40
+    },
+    "WHO": {
+        "Positive": 155,
+        "Negative": 28,
+        "Neutral": 17
+    },
+    "mansukhmandviya": {
+        "Positive": 518,
+        "Negative": 218,
+        "Neutral": 145
+    },
+    "AyushmanNHA": {
+        "Positive": 405,
+        "Negative": 186,
+        "Neutral": 243
+    },
+    "VP": {
+        "Positive": 25,
+        "Negative": 3,
+        "Neutral": 2
+    },
+    "DrTedros": {
+        "Positive": 624,
+        "Negative": 72,
+        "Neutral": 23
+    },
+    "SenSchumer": {
+        "Positive": 801,
+        "Negative": 212,
+        "Neutral": 52
+    },
+    "RandPaul": {
+        "Positive": 439,
+        "Negative": 319,
+        "Neutral": 91
+    },
+    "marcorubio": {
+        "Positive": 592,
+        "Negative": 655,
+        "Neutral": 55
+    },
+    "GovRonDeSantis": {
+        "Positive": 33,
+        "Negative": 7,
+        "Neutral": 7
+    },
+    "SenTedCruz": {
+        "Positive": 378,
+        "Negative": 674,
+        "Neutral": 48
+    },
+    "MauVila": {
+        "Positive": 21,
+        "Negative": 0,
+        "Neutral": 0
+    },
+    "osoriochong": {
+        "Positive": 51,
+        "Negative": 794,
+        "Neutral": 119
+    },
+    "GovKathyHochul": {
+        "Positive": 8,
+        "Negative": 7,
+        "Neutral": 1
+    },
+    "dremilyportermd": {
+        "Positive": 103,
+        "Negative": 133,
+        "Neutral": 27
+    },
+    "HLGatell": {
+        "Positive": 7,
+        "Negative": 296,
+        "Neutral": 55
+    },
+    "RahulGandhi": {
+        "Positive": 12,
+        "Negative": 19,
+        "Neutral": 5
+    }
+}
