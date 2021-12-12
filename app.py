@@ -8,13 +8,14 @@ try:
     import urllib.request as urllib2
 except ImportError:
     import urllib2
-
-
 from flask import Flask, jsonify
+from utils import get_replies
+
 
 app = Flask(__name__, static_url_path='', static_folder='frontend/build')
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
+SOLR_BASE_URL = 'http://18.118.137.90:8983/solr/'
 
 @app.route("/", defaults={'path':''})
 def serve(path):
@@ -31,7 +32,6 @@ def make_summary(query,pois,langs,countries,sentiment,start):
     hashtags = {}
     mentions = {}
     lines = query
-    url1 = 'http://3.135.204.148:8983/solr/'
     url2 = '/select?&defType=edismax&facet.field=tweet_lang&facet.field=country&facet.field=sentiment&facet=true&'
     if len(pois) > 0:
         url2 += "fq=" + get_url_by_field(pois, "poi_name") + "&"
@@ -50,7 +50,7 @@ def make_summary(query,pois,langs,countries,sentiment,start):
     OR = "%20or%20"
     for model in models:
         line = str(lines)
-        inurl = url1 + model + url2 + lang1 + line + OR + lang2 + line + url3
+        inurl = SOLR_BASE_URL + model + url2 + lang1 + line + OR + lang2 + line + url3
         print(inurl)
         data = json.loads(requests.get(inurl).text)
         inner_doc = data['response']['docs']
@@ -90,6 +90,18 @@ def my_microservice():
         sentiment = request.json["sentiment"]
     k = make_summary(query, pois,langs,countries,sentiment,start)
     return json.dumps(k,ensure_ascii=False, indent=4,sort_keys=True)
+
+
+@app.route('/replies', methods=['GET'])
+def getReplies():
+    tweet_id = request.args.get("tweet_id")
+    return get_replies(tweet_id, SOLR_BASE_URL)
+
+
+@app.route('/hesitancy', methods=['GET'])
+def getHesitancy():
+    with open('./negative_tweets.json') as f:
+        return json.load(f)
 
 
 @app.route('/test', methods=['GET'])

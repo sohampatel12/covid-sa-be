@@ -539,6 +539,12 @@ export default function App() {
               </ListItemIcon>
               <ListItemText primary={"Corpus stats"} />
             </ListItem>
+            <ListItem button key={"hesitancy"}>
+              <ListItemIcon>
+                <QueryStatsIcon />
+              </ListItemIcon>
+              <ListItemText primary={"Misinformation"} />
+            </ListItem>
           </List>
         </Box>
       </Drawer>
