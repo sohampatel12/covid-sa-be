@@ -1,17 +1,7 @@
 import json
-<<<<<<< Updated upstream
-# import urllib.request
-try:
-    import urllib.parse
-    import urllib.request as urllib2
-except ImportError:
-    import urllib2
-import matplotlib.pyplot as plt
-=======
 import urllib.request
 import urllib.parse
 # import matplotlib.pyplot as plt
->>>>>>> Stashed changes
 from wordcloud import WordCloud, STOPWORDS
 
 
@@ -91,19 +81,11 @@ def get_replies(tweet_id, base_url):
 
     for d in docs:
         replies['reply_list'].append(d)
-<<<<<<< Updated upstream
-        if d['sentiment'] == "1":
-            replies['positive'] += 1
-        elif d['sentiment'] == "0":
-            replies['neutral'] += 1
-        elif d['sentiment'] == "2":
-=======
         if d['sentiment'] == '1':
             replies['positive'] += 1
         elif d['sentiment'] == '0':
             replies['neutral'] += 1
         elif d['sentiment'] == '2':
->>>>>>> Stashed changes
             replies['negative'] += 1
 
     print (replies)
