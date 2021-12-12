@@ -15,7 +15,7 @@ export default function Replies(props: any) {
 
   useEffect(() => {
     if (!first) {
-      const url = new URL("http://localhost:5000/replies?tweet_id=" + props.tweet_id);
+      const url = new URL("http://localhost:9999/replies?tweet_id=" + props.tweet_id);
       fetch(url.toString(), {
         method: 'GET',
         // mode: 'cors',

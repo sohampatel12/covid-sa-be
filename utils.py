@@ -1,6 +1,10 @@
 import json
-import urllib.request
-import urllib.parse
+# import urllib.request
+try:
+    import urllib.parse
+    import urllib.request as urllib2
+except ImportError:
+    import urllib2
 import matplotlib.pyplot as plt
 from wordcloud import WordCloud, STOPWORDS
 
@@ -77,18 +81,18 @@ def get_replies(tweet_id, base_url):
 
     query = 'replied_to_tweet_id%3A'+ str(tweet_id)
 
-    url = base_url + '/IR_Final1' + '/select?&q='+query+'&wt=json&indent=true'
+    url = base_url + 'IR_Final1' + '/select?&q='+query+'&wt=json&indent=true'
     # print (f'URL: {url}')
-    data = urllib.request.urlopen(url)
+    data = urllib2.urlopen(url)
     docs = json.load(data)['response']['docs']
 
     for d in docs:
         replies['reply_list'].append(d)
-        if d['sentiment'] == 1:
+        if d['sentiment'] == "1":
             replies['positive'] += 1
-        elif d['sentiment'] == 0:
+        elif d['sentiment'] == "0":
             replies['neutral'] += 1
-        elif d['sentiment'] == -1:
+        elif d['sentiment'] == "2":
             replies['negative'] += 1
 
     reply = {}
@@ -136,7 +140,7 @@ def find_negative_tweets(base_url):
         #           spaceParse+'text_de%3A'+parsed+spaceParse+'or'+spaceParse+'text_ru%3A'+parsed+ \
         #           '&fl=id%2Cscore&wt=json&indent=true&rows=20'
         print (f'URL: {url}')
-        data = urllib.request.urlopen(url)
+        data = urllib2.urlopen(url)
         docs = json.load(data)['response']['docs']
         print (type(docs))
         print (t)
