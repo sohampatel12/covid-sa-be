@@ -1,4 +1,5 @@
 import json
+<<<<<<< Updated upstream
 # import urllib.request
 try:
     import urllib.parse
@@ -6,6 +7,11 @@ try:
 except ImportError:
     import urllib2
 import matplotlib.pyplot as plt
+=======
+import urllib.request
+import urllib.parse
+# import matplotlib.pyplot as plt
+>>>>>>> Stashed changes
 from wordcloud import WordCloud, STOPWORDS
 
 
@@ -46,12 +52,9 @@ def get_wordcloud(tweet_docs):
     full_str = full_str[:-1]
     
     stopwords = set(STOPWORDS)
-    wordcloud = WordCloud(width=1600,
-    stopwords=stopwords,height=800,max_font_size=200,max_words=50,collocations=False, background_color='black').generate(full_str)
-    plt.figure(figsize=(40,30))
-    plt.imshow(wordcloud, interpolation="bilinear")
-    plt.axis("off")
-    plt.savefig('wordcloud.png')
+    wordcloud = WordCloud(stopwords=stopwords).process_text(full_str)
+    wordList = sorted(wordcloud.items(), key=lambda x: x[1], reverse=True)
+    return wordList
 
 
 
@@ -88,13 +91,22 @@ def get_replies(tweet_id, base_url):
 
     for d in docs:
         replies['reply_list'].append(d)
+<<<<<<< Updated upstream
         if d['sentiment'] == "1":
             replies['positive'] += 1
         elif d['sentiment'] == "0":
             replies['neutral'] += 1
         elif d['sentiment'] == "2":
+=======
+        if d['sentiment'] == '1':
+            replies['positive'] += 1
+        elif d['sentiment'] == '0':
+            replies['neutral'] += 1
+        elif d['sentiment'] == '2':
+>>>>>>> Stashed changes
             replies['negative'] += 1
 
+    print (replies)
     reply = {}
     reply['replies'] = replies['reply_list']
     reply['count'] = []
@@ -112,6 +124,7 @@ def get_replies(tweet_id, base_url):
     reply['count'].append(obj)
     
     return reply
+
 
 
 def find_negative_tweets(base_url):
