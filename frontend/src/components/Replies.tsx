@@ -33,28 +33,16 @@ export default function Replies(props: any) {
           console.log(error);
         })
         .finally(() => {
-          setSpinner(false);
+          // setSpinner(false);
           setFirst(true);
         });
     }
   });
 
-  const renderError = () => {
-    if (error.show) {
-      return (
-        <Alert sx={{ mx: 2 }} severity="error">{error.message}</Alert>
-      )
-    } else {
-      return (
-        <div></div>
-      )
-    }
-  }
-
   const showProgress = () => {
     if (spinner) {
       return (
-        <Box sx={{ width: '100%', flex: 1, textAlign: 'center', mt: '200px' }}>
+        <Box sx={{ width: '100%', flex: 1, textAlign: 'center', mt: '50px' }}>
           <div><CircularProgress /></div>
           <div>Loading</div>
         </Box>
@@ -67,13 +55,33 @@ export default function Replies(props: any) {
     }
   }
 
+  const renderReply = () => {
+    console.log(data);
+    if (data && data.replies.length > 0) {
+      console.log("inside if");
+
+      return (
+        data?.replies?.map((item: any, index: number) => {
+          return (
+            <Typography sx={{ mb: 1.5 }} color="text.primary" key={item.id}>
+              {item.reply_text}
+            </Typography>
+          )
+        })
+      );
+    } else if (data && data.replies.length == 0 && !spinner) {
+      return (
+        <Typography sx={{ mb: 1.5 }} color="text.primary">
+          No replies found.
+        </Typography>
+      )
+    }
+  }
+
   return (
     <Grid container xs={12}>
-      <Grid item padding={2} xs={6}>
-        {showProgress()}
-        {renderError()}
-        <Results data={props}></Results>
-      </Grid>
+      {showProgress()}
+      {renderReply()}
     </Grid>
   )
 }

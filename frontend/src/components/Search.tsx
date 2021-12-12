@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Alert, Autocomplete, Box, Button, CircularProgress, Grid, Pagination, TextField, Toolbar, Typography } from '@mui/material';
 import Results from './Results';
-import Analytics from './Analytics';
+import Analytics from './Analytics.jsx';
 
 
 export default function Search(props: any) {
@@ -128,14 +128,7 @@ export default function Search(props: any) {
 
   const renderResults = () => {
     if (data) {
-      const countryList = data.facet_counts?.facet_fields?.country;
-      let countryDict = {}
-      // for (let i=0; i<countryList.length; i+=2) {
-      //   if (countryDict.USA) {
-      //     countryDict["USA"] += countryList[i+1];
-      //   }
-      // }
-      
+
       return (
         <Grid container xs={12}>
           <Grid item padding={2} xs={6}>
@@ -151,10 +144,11 @@ export default function Search(props: any) {
           </Grid>
           <Grid item padding={2} xs={6} sx={{ bgcolor: "primary.disabled" }}>
             <Analytics
-              language={data.lang}
+              language={data.language}
               country={data.country}
               hashtags={data.hashtags}
               mentions={data.mentions}
+              sentiment={data.sentiment}
             ></Analytics>
           </Grid>
         </Grid>

@@ -11,15 +11,17 @@ const drawerWidth = 300;
 
 export default function App() {
 
+  const [screen, setScreen] = React.useState(0);
+
   const [languages, setLanguage] = React.useState({
-    english: false,
-    hindi: false,
-    spanish: false,
+    en: false,
+    hi: false,
+    es: false,
   });
   const [countries, setRegion] = React.useState({
-    usa: false,
-    india: false,
-    mexico: false
+    USA: false,
+    India: false,
+    Mexico: false
   });
   const [pois, setPois] = React.useState({
     SSalud_mx: false,
@@ -124,11 +126,9 @@ export default function App() {
     })
   };
 
-  // const getPoiValue = (name: string) => {
-  //   if (pois && pois[name]) {
-  //     return pois[name];
-  //   }
-  // }
+  const handleScreenChange = (num: number) => {
+    setScreen(num);
+  }
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -152,7 +152,7 @@ export default function App() {
         <Toolbar />
         <Box sx={{ overflow: 'auto' }}>
           <List>
-            <ListItem button key={"search"}>
+            <ListItem button key={"search"} onClick={() => { handleScreenChange(0) }}>
               <ListItemIcon>
                 <SearchIcon />
               </ListItemIcon>
@@ -173,19 +173,19 @@ export default function App() {
                     <FormGroup>
                       <FormControlLabel
                         control={
-                          <Checkbox checked={languages.english} onChange={handleLanguageChange} name="english" />
+                          <Checkbox checked={languages.en} onChange={handleLanguageChange} name="en" />
                         }
                         label="English"
                       />
                       <FormControlLabel
                         control={
-                          <Checkbox checked={languages.hindi} onChange={handleLanguageChange} name="hindi" />
+                          <Checkbox checked={languages.hi} onChange={handleLanguageChange} name="hi" />
                         }
                         label="Hindi"
                       />
                       <FormControlLabel
                         control={
-                          <Checkbox checked={languages.spanish} onChange={handleLanguageChange} name="spanish" />
+                          <Checkbox checked={languages.es} onChange={handleLanguageChange} name="es" />
                         }
                         label="Spanish"
                       />
@@ -196,19 +196,19 @@ export default function App() {
                     <FormGroup>
                       <FormControlLabel
                         control={
-                          <Checkbox checked={countries.usa} onChange={handleRegionChange} name="usa" />
+                          <Checkbox checked={countries.USA} onChange={handleRegionChange} name="USA" />
                         }
                         label="USA"
                       />
                       <FormControlLabel
                         control={
-                          <Checkbox checked={countries.india} onChange={handleRegionChange} name="india" />
+                          <Checkbox checked={countries.India} onChange={handleRegionChange} name="India" />
                         }
                         label="India"
                       />
                       <FormControlLabel
                         control={
-                          <Checkbox checked={countries.mexico} onChange={handleRegionChange} name="mexico" />
+                          <Checkbox checked={countries.Mexico} onChange={handleRegionChange} name="Mexico" />
                         }
                         label="Mexico"
                       />

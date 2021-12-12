@@ -228,6 +228,54 @@ def poi_with_sentiment(query_result):
     return pois_sntmt
 
 
+def fetch_counts(data):
+    data["country"] = [{ "name": "Mexico", "value": 0, "color": "green"}, { "name": "USA", "value": 0, "color": "blue"}, { "name": "India", "value": 0, "color": "orange"} ]
+    data["language"] = [{ "name": "English", "value": 0, "color": "green"}, { "name": "Hindi", "value": 0, "color": "blue"}, { "name": "Spanish", "value": 0, "color": "orange"} ]
+    data["sentiment"] = [{ "name": "Positive", "value": 0, "color": "green"}, { "name": "Negative", "value": 0, "color": "red"}, { "name": "Neutral", "value": 0, "color": "grey"} ]
+    data["hashtags"] = []
+    if "facet_counts" in data:
+        if "facet_fields" in data["facet_counts"]:
+            if "country" in data["facet_counts"]["facet_fields"]:
+                countryCnt = data["facet_counts"]["facet_fields"]["country"]
+                for i in range(len(countryCnt)-1):
+                    if str(countryCnt[i]).lower() == "Mexico".lower():
+                        data["country"][0]["value"] += data["country"][0]["value"] + countryCnt[i+1]
+                    if str(countryCnt[i]).lower() == "USA".lower():
+                        data["country"][1]["value"] += data["country"][1]["value"] + countryCnt[i+1]
+                    if str(countryCnt[i]).lower() == "India".lower():
+                        data["country"][2]["value"] += data["country"][2]["value"] + countryCnt[i+1]
+
+            if "tweet_lang" in data["facet_counts"]["facet_fields"]:
+                langCnt = data["facet_counts"]["facet_fields"]["tweet_lang"]
+                for i in range(len(langCnt)-1):
+                    if str(langCnt[i]).lower() == "en":
+                        data["language"][0]["value"] += data["language"][0]["value"] + langCnt[i+1]
+                    if str(langCnt[i]).lower() == "hi":
+                        data["language"][1]["value"] += data["language"][1]["value"] + langCnt[i+1]
+                    if str(langCnt[i]).lower() == "es":
+                        data["language"][2]["value"] += data["language"][2]["value"] + langCnt[i+1]
+
+            if "sentiment" in data["facet_counts"]["facet_fields"]:
+                sentiCnt = data["facet_counts"]["facet_fields"]["sentiment"]
+                for i in range(len(sentiCnt)-1):
+                    if str(sentiCnt[i]).lower() == "1":
+                        data["sentiment"][0]["value"] += data["sentiment"][0]["value"] + sentiCnt[i+1]
+                    if str(sentiCnt[i]).lower() == "2":
+                        data["sentiment"][1]["value"] += data["sentiment"][1]["value"] + sentiCnt[i+1]
+                    if str(sentiCnt[i]).lower() == "0":
+                        data["sentiment"][2]["value"] += data["sentiment"][2]["value"] + sentiCnt[i+1]
+
+            if "hashtags" in data["facet_counts"]["facet_fields"]:
+                hashtagsCnt = data["facet_counts"]["facet_fields"]["hashtags"]
+                for i in range(len(hashtagsCnt)-1):
+                    d = {}
+                    if i%2 == 0:
+                        d["text"] = hashtagsCnt[i]
+                        d["value"] = hashtagsCnt[i+1]
+                    data["hashtags"].append(d)
+    return data
+
+
 def popular_hashtags_mentions(query_result, k):
     '''
     Returns the top k hashtags and mentions given in the query

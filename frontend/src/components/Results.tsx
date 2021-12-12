@@ -77,7 +77,7 @@ export default function Results(props: any) {
         <CardHeader
           title={
             <div>
-              <span> {item.id} </span>
+              <span> {item.name ? item.name : item.poi_name ? item.poi_name : item.id } </span>
               {item.verified ? <span> <VerifiedIcon color='success' fontSize='inherit' /> </span> : ''}
             </div>
           }
@@ -88,11 +88,11 @@ export default function Results(props: any) {
             </IconButton>
           }
           avatar={
-            <Avatar aria-label="avatar">{item.tweet_text ? item.tweet_text[0] : item.reply_text[0]}</Avatar>
+            <Avatar aria-label="avatar">{item.name ? item.name[0] : item.poi_name ? item.poi_name[0] : item.id[0] }</Avatar>
           }
         />
         <CardContent>
-          <Typography sx={{ mb: 1.5 }} color="text.primary">
+          <Typography color="text.primary">
             {parts}
           </Typography>
         </CardContent>

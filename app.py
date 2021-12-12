@@ -9,7 +9,7 @@ try:
 except ImportError:
     import urllib2
 from flask import Flask, jsonify
-from utils import get_replies
+from utils import get_replies, fetch_counts
 
 
 app = Flask(__name__, static_url_path='', static_folder='frontend/build')
@@ -55,22 +55,7 @@ def make_summary(query,pois,langs,countries,sentiment,start):
         inurl = SOLR_BASE_URL + model + url2 + lang1 + line + OR + lang2 + line + url3
         print(inurl)
         data = json.loads(requests.get(inurl).text)
-        inner_doc = data['response']['docs']
-        for d in inner_doc:
-            if not (d.get("hashtags") is None):
-                totalHashtags = d["hashtags"]
-                for h in totalHashtags:
-                    if h in hashtags:
-                        hashtags[h] += 1
-                    else:
-                        hashtags[h] = 1
-            if not (d.get("mentions") is None):
-                totalMentions = d["mentions"]
-                for m in totalMentions:
-                    if m in mentions:
-                        mentions[m] += 1
-                    else:
-                        mentions[m] = 1
+    data = fetch_counts(data)
     return data
 
 @app.route('/api',methods=["POST"])
