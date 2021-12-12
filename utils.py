@@ -1,11 +1,7 @@
 import json
-# import urllib.request
-try:
-    import urllib.parse
-    import urllib.request as urllib2
-except ImportError:
-    import urllib2
-import matplotlib.pyplot as plt
+import urllib.request
+import urllib.parse
+# import matplotlib.pyplot as plt
 from wordcloud import WordCloud, STOPWORDS
 
 
@@ -46,12 +42,13 @@ def get_wordcloud(tweet_docs):
     full_str = full_str[:-1]
     
     stopwords = set(STOPWORDS)
-    wordcloud = WordCloud(width=1600,
-    stopwords=stopwords,height=800,max_font_size=200,max_words=50,collocations=False, background_color='black').generate(full_str)
-    plt.figure(figsize=(40,30))
-    plt.imshow(wordcloud, interpolation="bilinear")
-    plt.axis("off")
-    plt.savefig('wordcloud.png')
+    wordcloud = WordCloud(stopwords=stopwords).process_text(full_str)
+    wordList = sorted(wordcloud.items(), key=lambda x: x[1], reverse=True)
+
+    wList = {}
+    for w in wordList:
+        wList[w[0]] = w[1]
+    return wList
 
 
 
@@ -81,20 +78,21 @@ def get_replies(tweet_id, base_url):
 
     query = 'replied_to_tweet_id%3A'+ str(tweet_id)
 
-    url = base_url + 'IR_Final1' + '/select?&q='+query+'&wt=json&indent=true'
+    url = base_url + 'IR_Final' + '/select?&q='+query+'&wt=json&indent=true'
     # print (f'URL: {url}')
     data = urllib2.urlopen(url)
     docs = json.load(data)['response']['docs']
 
     for d in docs:
         replies['reply_list'].append(d)
-        if d['sentiment'] == "1":
+        if d['sentiment'] == '1':
             replies['positive'] += 1
-        elif d['sentiment'] == "0":
+        elif d['sentiment'] == '0':
             replies['neutral'] += 1
-        elif d['sentiment'] == "2":
+        elif d['sentiment'] == '2':
             replies['negative'] += 1
 
+    print (replies)
     reply = {}
     reply['replies'] = replies['reply_list']
     reply['count'] = []
@@ -112,6 +110,7 @@ def get_replies(tweet_id, base_url):
     reply['count'].append(obj)
     
     return reply
+
 
 
 def find_negative_tweets(base_url):
@@ -135,7 +134,7 @@ def find_negative_tweets(base_url):
         # print (parsed)
         # space = ' '
         # spaceParse = urllib.parse.quote(space)
-        url = 'http://'+AWS_IP+':8983/solr/'+'IR_Final1'+'/select?&q='+txt1+'&wt=json&indent=true&rows=400'
+        url = 'http://'+AWS_IP+':8983/solr/'+'IR_Final'+'/select?&q='+txt1+'&wt=json&indent=true&rows=400'
         #   url = 'http://'+AWS_IP+':8983/solr/'+core_name+'/select?q=text_en%3A'+parsed+spaceParse+'or'+ \
         #           spaceParse+'text_de%3A'+parsed+spaceParse+'or'+spaceParse+'text_ru%3A'+parsed+ \
         #           '&fl=id%2Cscore&wt=json&indent=true&rows=20'
@@ -329,4 +328,201 @@ def popular_hashtags_mentions(query_result, k):
 
 
     return hashList, mentList
+
+
+
+def generate_corpus_results(dir):
+
+    dir_name = dir                     ### Put name of directory where tweets are present in 
+    files = os.listdir(dir_name)  
+
+    pois = {}
+    country = {}
+    lang = {} 
+    sent_poi = {}
+    
+    sentiment = {}
+    sentiment['Positive'] = 0
+    sentiment['Negative'] = 0
+    sentiment['Neutral'] = 0
+
+    hashtags = {}
+    mentions = {}
+
+    date_count = {}
+
+    for f in files:
+        if f[-4:] == 'json':
+            p = open(dir_name+'/'+f, 'r')
+            data = json.load(p)
+            
+            for d in data:
+                if 'poi_name' in d.keys():
+                    if d['poi_name'] not in pois.keys():
+                        pois[d['poi_name']] = 1
+                        sent_poi[d['poi_name']] = {}
+                        sent_poi[d['poi_name']]['Positive'] = 0
+                        sent_poi[d['poi_name']]['Negative'] = 0
+                        sent_poi[d['poi_name']]['Neutral'] = 0
+                        if d['sentiment'] == '0' or d['sentiment'] == 0:
+                            sent_poi[d['poi_name']]['Neutral'] += 1
+                            sentiment['Neutral'] += 1
+                        elif d['sentiment'] == '1' or d['sentiment'] == 1:
+                            sent_poi[d['poi_name']]['Positive'] += 1
+                            sentiment['Positive'] += 1
+                        elif d['sentiment'] == '2' or d['sentiment'] == 2:
+                            sent_poi[d['poi_name']]['Negative'] += 1
+                            sentiment['Negative'] += 1
+                        
+                    
+                    else:
+                        pois[d['poi_name']] += 1
+                        if d['sentiment'] == '0' or d['sentiment'] == 0:
+                            sent_poi[d['poi_name']]['Neutral'] += 1
+                            sentiment['Neutral'] += 1
+                        elif d['sentiment'] == '1' or d['sentiment'] == 1:
+                            sent_poi[d['poi_name']]['Positive'] += 1
+                            sentiment['Positive'] += 1
+                        elif d['sentiment'] == '2' or d['sentiment'] == 2:
+                            sent_poi[d['poi_name']]['Negative'] += 1
+                            sentiment['Negative'] += 1
+
+                ## country
+                if d['country'].lower() not in country.keys():
+                    country[d['country'].lower()] = 1
+                
+                else:
+                    country[d['country'].lower()] += 1
+                
+                ## language
+                if d['tweet_lang'] not in lang.keys():
+                    lang[d['tweet_lang']] = 1
+                else:
+                    lang[d['tweet_lang']] += 1
+
+                ## poi_based_sentiment
+                ### handled up at poi
+
+
+                ## total sentiment
+                ## handled in POIs
+                
+
+                ## top 10 hashtags and mentions
+                if 'hashtags' in d.keys() and isinstance(d['hashtags'], list):
+                    for l in d['hashtags']:
+                        if l not in hashtags.keys():
+                            hashtags[l] = 1
+                        else:
+                            hashtags[l] += 1
+                
+                if 'mentions' in d.keys() and isinstance(d['mentions'], list):
+                    for m in d['mentions']:
+                        if m not in mentions.keys():
+                            mentions[m] = 1
+                        else:
+                            mentions[m] += 1
+
+
+
+
+                ## number of tweets based on days
+                if 'tweet_date' in d.keys():
+                    dt = d['tweet_date'].split('T')[0]
+                    if dt not in date_count.keys():
+                        date_count[dt] = 1
+                    else:
+                        date_count[dt] += 1
+
+
+
+    ## poi_static_json
+    poisL = []
+    poikList = list(pois.keys())
+    for i in poikList:
+        obj = {}
+        
+        obj['name'] = i
+        obj['value'] = pois[i]
+
+        poisL.append(obj)
+    with open('static_pois.json', 'w') as ff:
+        json.dump(poisL, indent = 4)
+
+    countryL = []
+    counkList = list(country.keys())
+    for i in counkList:
+        obj = {}
+        
+        obj['name'] = i
+        obj['value'] = country[i]
+
+        countryL.append(obj)
+    with open('static_country.json', 'w') as ff:
+        json.dump(countryL, indent = 4)
+
+    langL = []
+    langkList = list(lang.keys())
+    for i in langkList:
+        obj = {}
+        
+        obj['name'] = i
+        obj['value'] = lang[i]
+
+        langL.append(obj)
+    with open('static_lang.json', 'w') as ff:
+        json.dump(langL, indent = 4)
+
+    sentL = []
+    sentkList = list(sentiment.keys())
+    for i in sentkList:
+        obj = {}
+        
+        obj['name'] = i
+        obj['value'] = sentiment[i]
+
+        langL.append(obj)
+    with open('static_sentiment.json', 'w') as ff:
+        json.dump(sentL, indent = 4)
+
+    with open('static_poi_sent.json', 'w') as ff:
+        json.dump(sent_poi, indent = 4)
+
+    hash_srtd = sorted(hashtags.items(), key=lambda x: x[1], reverse=True)
+    ment_srtd = sorted(mentions.items(), key=lambda x: x[1], reverse=True)
+
+    # if k < len(hash_srtd):
+    #     hash_srtd = hash_srtd[:k]
+    # if k < len(ment_srtd):
+    #     ment_srtd = ment_srtd[:k]
+
+    ### Returned is a two-tuple list like this below
+    ## [('COVID19', 496), ('VaccinEquity', 155), ('SecretGala11', 136), ('CrisLu25N', 123)]
+    hashList = []
+    mentList = []
+
+    for i in range(len(hash_srtd)):
+        obj = {}
+        
+        obj['name'] = hash_srtd[i][0]
+        obj['value'] = hash_srtd[i][1]
+
+        hashList.append(obj)
+    
+    for i in range(len(ment_srtd)):
+        obj = {}
+        
+        obj['name'] = ment_srtd[i][0]
+        obj['value'] = ment_srtd[i][1]
+
+        mentList.append(obj)
+
+    with open('static_hashtags.json', 'w') as ff:
+        json.dump(hashList, indent = 4)
+
+    with open('static_mentions.json', 'w') as ff:
+        json.dump(mentList, indent = 4)
+
+
+    
 
