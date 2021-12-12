@@ -29,7 +29,7 @@ export default function Search(props: any) {
       setSpinner(false);
       console.log("Enter some details");
     } else {
-      const url = new URL("http://localhost:5000/api");
+      const url = new URL("http://localhost:9999/api");
       const headers = {
         'Content-Type': 'application/json'
       }
@@ -128,6 +128,14 @@ export default function Search(props: any) {
 
   const renderResults = () => {
     if (data) {
+      const countryList = data.facet_counts?.facet_fields?.country;
+      let countryDict = {}
+      // for (let i=0; i<countryList.length; i+=2) {
+      //   if (countryDict.USA) {
+      //     countryDict["USA"] += countryList[i+1];
+      //   }
+      // }
+      
       return (
         <Grid container xs={12}>
           <Grid item padding={2} xs={6}>

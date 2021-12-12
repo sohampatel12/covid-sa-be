@@ -1,7 +1,13 @@
 import { CardContent, Card, Grid } from '@mui/material';
+import { useEffect } from 'react';
 import { Bar, BarChart, CartesianGrid, Legend, Line, LineChart, Pie, PieChart, Tooltip, XAxis, YAxis } from 'recharts';
 
 export default function Analytics(props: any) {
+
+  useEffect(() => {
+    console.log(props);
+    
+  })
 
   const data01 = [
     {
@@ -55,7 +61,7 @@ export default function Analytics(props: any) {
       Result analytics
       <Card sx={{ mt: 2, bgcolor: 'ghostwhite' }}>
         <CardContent>
-          <PieChart width={730} height={250}>
+          <PieChart width={500} height={250}>
             <Tooltip />
             <Pie data={data01} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={50} fill="#8884d8" />
             <Pie data={data02} dataKey="value" nameKey="name" cx="50%" cy="50%" innerRadius={60} outerRadius={80} fill="#82ca9d" label />
@@ -63,7 +69,7 @@ export default function Analytics(props: any) {
         </CardContent>
       </Card>
       <Card sx={{ mt: 2, bgcolor: 'ghostwhite', pt: 2 }}>
-        <BarChart width={730} height={250} data={data}>
+        <BarChart width={500} height={250} data={data}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="name" />
           <YAxis />
@@ -74,7 +80,7 @@ export default function Analytics(props: any) {
         </BarChart>
       </Card>
       <Card sx={{ mt: 2, bgcolor: 'ghostwhite', pt: 2 }}>
-        <LineChart width={730} height={250} data={data1}
+        <LineChart width={500} height={250} data={data1}
           margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="name" />
