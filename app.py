@@ -17,7 +17,7 @@ from utils import get_replies, fetch_counts
 app = Flask(__name__, static_url_path='', static_folder='frontend/build')
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
-SOLR_BASE_URL = 'http://18.118.137.90:8983/solr/'
+SOLR_BASE_URL = 'http://3.144.35.148:8983/solr/'
 
 @app.route("/", defaults={'path':''})
 def serve(path):
@@ -73,6 +73,7 @@ def make_summary(query,pois,langs,countries,sentiment,start):
         query, hashtags = hin_span_tokenizer(query)
     lines = query
     url2 = '/select?&defType=edismax&facet.field=tweet_lang&facet.field=country&facet.field=sentiment&facet.field=hashtags&facet=true&'
+    url2 += "fq=" + urllib.parse.quote("-replied_to_user_id:*") + "&"
     if len(pois) > 0:
         url2 += "fq=" + get_url_by_field(pois, "poi_name") + "&"
     if len(langs) > 0:
@@ -89,7 +90,7 @@ def make_summary(query,pois,langs,countries,sentiment,start):
     else:
         url2 += 'qf=all^3&q.op=OR&q='
         lang2 = "all%3A"
-    models = ["IR_Final1"]
+    models = ["IR_Final"]
     lang1 = "text_en%3A"
     # lang2 = "text_text%3A"
     # lang3 = "text_hi%3A"
