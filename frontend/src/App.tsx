@@ -5,6 +5,8 @@ import QueryStatsIcon from '@mui/icons-material/QueryStats';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import './App.css';
 import Search from './components/Search';
+import CorpusStats from './components/CorpusStats';
+import Misinformation from './components/Misinformation';
 import { useEffect } from 'react';
 
 const drawerWidth = 300;
@@ -12,6 +14,9 @@ const drawerWidth = 300;
 export default function App() {
 
   const [screen, setScreen] = React.useState(0);
+
+  console.log(screen, 'screen');
+
 
   const [languages, setLanguage] = React.useState({
     en: false,
@@ -129,7 +134,7 @@ export default function App() {
   const handleScreenChange = (num: number) => {
     setScreen(num);
   }
-
+  
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
@@ -537,23 +542,41 @@ export default function App() {
               <ListItemIcon>
                 <QueryStatsIcon />
               </ListItemIcon>
-              <ListItemText primary={"Corpus stats"} />
+              <ListItemText onClick={() => setScreen(1)} primary={"Corpus stats"} />
             </ListItem>
             <ListItem button key={"hesitancy"}>
               <ListItemIcon>
                 <QueryStatsIcon />
               </ListItemIcon>
-              <ListItemText primary={"Misinformation"} />
+              <ListItemText onClick={() => setScreen(2)} primary={"Misinformation"} />
             </ListItem>
           </List>
         </Box>
       </Drawer>
 
+
+      {screen === 0 && (
       <Search
         languages={languages}
         countries={countries}
         pois={pois}
       ></Search>
+      )}
+
+      {screen === 1 && (
+       <CorpusStats
+       languages={languages}
+       countries={countries}
+       pois={pois}
+     />
+      )}
+      {screen === 2 && (
+        <Misinformation
+        languages={languages}
+        countries={countries}
+        pois={pois}
+      />
+      )}
     </Box >
   );
 }

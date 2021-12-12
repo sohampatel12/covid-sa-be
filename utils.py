@@ -256,7 +256,7 @@ def fetch_counts(data):
 
             if "sentiment" in data["facet_counts"]["facet_fields"]:
                 sentiCnt = data["facet_counts"]["facet_fields"]["sentiment"]
-                for i in range(len(sentiCnt)-1):
+                for i in range(0, len(sentiCnt)-1, 2):
                     if str(sentiCnt[i]).lower() == "1":
                         data["sentiment"][0]["value"] += data["sentiment"][0]["value"] + sentiCnt[i+1]
                     if str(sentiCnt[i]).lower() == "2":

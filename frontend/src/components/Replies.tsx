@@ -15,6 +15,7 @@ export default function Replies(props: any) {
 
   useEffect(() => {
     if (!first) {
+      setSpinner(true);
       const url = new URL("http://localhost:9999/replies?tweet_id=" + props.tweet_id);
       fetch(url.toString(), {
         method: 'GET',
@@ -24,7 +25,7 @@ export default function Replies(props: any) {
         .then(response => response.json())
         .then(result => {
           setData(result);
-        })
+       })
         .catch(error => {
           setError({
             show: true,
@@ -33,11 +34,11 @@ export default function Replies(props: any) {
           console.log(error);
         })
         .finally(() => {
-          // setSpinner(false);
+          setSpinner(false);
           setFirst(true);
         });
     }
-  });
+  }, []);
 
   const showProgress = () => {
     if (spinner) {
