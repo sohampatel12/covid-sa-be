@@ -92,7 +92,7 @@ def my_microservice():
 
 @app.route('/replies/', methods=['GET'])
 def getReplies():
-    print ('abc123321')
+
     tweet_id = request.args.get("tweet_id")
     return get_replies(tweet_id, SOLR_BASE_URL)
 
