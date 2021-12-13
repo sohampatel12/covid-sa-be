@@ -4,6 +4,9 @@ import ModeCommentIcon from '@mui/icons-material/ModeComment';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import VerifiedIcon from '@mui/icons-material/Verified';
+import SentimentNeutralIcon from '@mui/icons-material/SentimentNeutral';
+import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
+import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied';
 import Replies from './Replies';
 
 const MENTIONS = /@([a-z\d_]+)/ig;
@@ -28,21 +31,31 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
 
 export default function Results(props: any) {
   const [expanded, setExpanded] = React.useState(false);
-  const [showReplies, setShowReplies] = React.useState(Array(10));
+  const list = [false, false, false, false, false, false, false, false, false, false]
+  const [showReplies, setShowReplies] = React.useState(list);
 
   const handleExpandClick = (index: number) => {
+    console.log("expand", expanded, showReplies.splice(0, index));
+    
     if (showReplies[index]) {
-      setShowReplies([...showReplies.splice(0, index), !showReplies[index], ...showReplies.splice(index + 1)]);
+      let newShowReplies = [...showReplies];
+      newShowReplies[index] = !newShowReplies[index];
+      setShowReplies(newShowReplies);
     }
     setExpanded(!expanded);
   };
-
+  
   const handleRepliesClick = (index: number) => {
+    console.log("replies", expanded, showReplies);
     if (expanded) {
       setExpanded(!expanded);
     }
-    setShowReplies([...showReplies.splice(0, index), !showReplies[index], ...showReplies.splice(index + 1)]);
+    let newShowReplies = [...showReplies];
+    newShowReplies[index] = !newShowReplies[index];
+    setShowReplies(newShowReplies);
   };
+
+  console.log(showReplies);
 
   function showTweet(id: any) {
     window.open("https://twitter.com/test/status/" + id.toString());
@@ -97,6 +110,21 @@ export default function Results(props: any) {
           </Typography>
         </CardContent>
         <CardActions>
+          {
+            item.sentiment && item.sentiment === "1" && (
+              <SentimentSatisfiedAltIcon sx={{ mx: 1, color: "green" }}/>
+            )
+          }
+          {
+            item.sentiment && item.sentiment === "0" && (
+              <SentimentNeutralIcon sx={{ mx: 1, color: "grey" }} />
+            )
+          }
+          {
+            item.sentiment && (item.sentiment === "2" || item.sentiment === "-1") && (
+              <SentimentVeryDissatisfiedIcon sx={{ mx: 1, color: "red" }}/>
+            )
+          }
           <ExpandMore
             expand={showReplies[index]}
             onClick={() => { handleRepliesClick(index) }}

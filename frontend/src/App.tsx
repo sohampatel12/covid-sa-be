@@ -1,5 +1,5 @@
 import React from 'react';
-import { Accordion, AccordionDetails, AccordionSummary, AppBar, Box, Checkbox, CssBaseline, Drawer, FormControl, FormControlLabel, FormGroup, FormLabel, List, ListItem, ListItemIcon, ListItemText, Toolbar, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, AppBar, Box, Checkbox, CssBaseline, Divider, Drawer, FormControl, FormControlLabel, FormGroup, FormLabel, List, ListItem, ListItemIcon, ListItemText, Toolbar, Typography } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import QueryStatsIcon from '@mui/icons-material/QueryStats';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -22,6 +22,11 @@ export default function App() {
     en: false,
     hi: false,
     es: false,
+  });
+  const [sentiment, setSentiment] = React.useState({
+    positive: false,
+    neutral: false,
+    negative: false,
   });
   const [countries, setRegion] = React.useState({
     USA: false,
@@ -131,10 +136,17 @@ export default function App() {
     })
   };
 
+  const handleSentimentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSentiment({
+      ...sentiment,
+      [event.target.name]: event.target.checked,
+    })
+  };
+
   const handleScreenChange = (num: number) => {
     setScreen(num);
   }
-  
+
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
@@ -157,6 +169,8 @@ export default function App() {
         <Toolbar />
         <Box sx={{ overflow: 'auto' }}>
           <List>
+            <Divider />
+            <Divider />
             <ListItem button key={"search"} onClick={() => { handleScreenChange(0) }}>
               <ListItemIcon>
                 <SearchIcon />
@@ -170,11 +184,11 @@ export default function App() {
                   aria-controls="panel1a-content"
                   id="panel1a-header"
                 >
-                  <Typography>Filters</Typography>
+                  <Typography>Language</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                  <FormControl sx={{ m: 1 }} component="fieldset" variant="standard">
-                    <FormLabel component="legend">Language</FormLabel>
+                  <FormControl sx={{ m: 1 }} component="fieldset" variant="standard" fullWidth>
+                    <FormLabel component="legend"></FormLabel>
                     <FormGroup>
                       <FormControlLabel
                         control={
@@ -196,8 +210,21 @@ export default function App() {
                       />
                     </FormGroup>
                   </FormControl>
+                </AccordionDetails>
+              </Accordion>
+            </ListItem>
+            <ListItem>
+              <Accordion>
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel1a-content"
+                  id="panel1a-header"
+                >
+                  <Typography>Region</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
                   <FormControl sx={{ m: 1 }} component="fieldset" variant="standard">
-                    <FormLabel component="legend">Region</FormLabel>
+                    <FormLabel component="legend"></FormLabel>
                     <FormGroup>
                       <FormControlLabel
                         control={
@@ -219,8 +246,21 @@ export default function App() {
                       />
                     </FormGroup>
                   </FormControl>
+                </AccordionDetails>
+              </Accordion>
+            </ListItem>
+            <ListItem>
+              <Accordion>
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel1a-content"
+                  id="panel1a-header"
+                >
+                  <Typography>Person of Interest</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
                   <FormControl sx={{ m: 1 }} component="fieldset" variant="standard">
-                    <FormLabel component="legend">Person of Interest</FormLabel>
+                    <FormLabel component="legend"></FormLabel>
                     <FormGroup>
                       <FormControlLabel
                         control={
@@ -538,44 +578,88 @@ export default function App() {
                 </AccordionDetails>
               </Accordion>
             </ListItem>
+            <ListItem>
+              <Accordion>
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel1a-content"
+                  id="panel1a-header"
+                >
+                  <Typography>Sentiment</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <FormControl sx={{ m: 1 }} component="fieldset" variant="standard">
+                    <FormLabel component="legend"></FormLabel>
+                    <FormGroup>
+                      <FormControlLabel
+                        control={
+                          <Checkbox checked={sentiment.positive} onChange={handleSentimentChange} name="positive" />
+                        }
+                        label="Positive"
+                      />
+                      <FormControlLabel
+                        control={
+                          <Checkbox checked={sentiment.neutral} onChange={handleSentimentChange} name="neutral" />
+                        }
+                        label="Neutral"
+                      />
+                      <FormControlLabel
+                        control={
+                          <Checkbox checked={sentiment.negative} onChange={handleSentimentChange} name="negative" />
+                        }
+                        label="Negative"
+                      />
+                    </FormGroup>
+                  </FormControl>
+                </AccordionDetails>
+              </Accordion>
+            </ListItem>
+            <Divider />
+            <Divider />
             <ListItem button key={"stats"}>
               <ListItemIcon>
                 <QueryStatsIcon />
               </ListItemIcon>
               <ListItemText onClick={() => setScreen(1)} primary={"Corpus stats"} />
             </ListItem>
+            <Divider />
+            <Divider />
+
             <ListItem button key={"hesitancy"}>
               <ListItemIcon>
                 <QueryStatsIcon />
               </ListItemIcon>
               <ListItemText onClick={() => setScreen(2)} primary={"Misinformation"} />
             </ListItem>
+            <Divider />
+            <Divider />
           </List>
         </Box>
       </Drawer>
 
 
       {screen === 0 && (
-      <Search
-        languages={languages}
-        countries={countries}
-        pois={pois}
-      ></Search>
+        <Search
+          languages={languages}
+          countries={countries}
+          pois={pois}
+          sentiment={sentiment}
+        ></Search>
       )}
 
       {screen === 1 && (
-       <CorpusStats
-       languages={languages}
-       countries={countries}
-       pois={pois}
-     />
+        <CorpusStats
+          languages={languages}
+          countries={countries}
+          pois={pois}
+        />
       )}
       {screen === 2 && (
         <Misinformation
-        languages={languages}
-        countries={countries}
-        pois={pois}
-      />
+          languages={languages}
+          countries={countries}
+          pois={pois}
+        />
       )}
     </Box >
   );

@@ -48,13 +48,18 @@ export default function Analytics(props) {
       <Card sx={{ mt: 2, bgcolor: 'ghostwhite' }}>
         <CardContent>
           <Typography sx={{ fontSize: 14 }} color="text.primary" gutterBottom>
-            Language wise division
+            Sentiment wise division
           </Typography>
           {createPieChart(props.sentiment)}
         </CardContent>
       </Card>
-      <Card sx={{ mt: 2, bgcolor: 'ghostwhite'}}>
-        <ReactWordcloud words={props.hashtags} options={options} size={size} />
+      <Card sx={{ mt: 2, bgcolor: 'ghostwhite' }}>
+        <CardContent>
+          <Typography sx={{ fontSize: 14 }} color="text.primary" gutterBottom>
+            Hashtags word cloud
+          </Typography>
+          <ReactWordcloud words={props.hashtags} options={options} size={size} />
+        </CardContent>
       </Card>
     </Grid>
   )

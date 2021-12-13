@@ -38,7 +38,8 @@ export default function Search(props: any) {
         "start": start ? start.toString() : "0",
         "pois": Array(),
         "countries": Array(),
-        "languages": Array()
+        "languages": Array(),
+        "sentiment": Array()
       }
       createRequestBody(body);
 
@@ -80,6 +81,18 @@ export default function Search(props: any) {
     for (let key in props.pois) {
       if (props.pois[key]) {
         body.pois.push(key)
+      }
+    }
+    for (let key in props.sentiment) {
+      if (key == "positive" && props.sentiment[key] == true) {
+        body.sentiment.push("1");
+      }
+      if (key == "neutral" && props.sentiment[key] == true) {
+        body.sentiment.push("0");
+      }
+      if (key == "negative" && props.sentiment[key] == true) {
+        // body.sentiment.push("-1");
+        body.sentiment.push("2");
       }
     }
   }
