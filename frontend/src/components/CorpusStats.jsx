@@ -34,6 +34,7 @@ export default function CorpusStats(props) {
   const mentions = require("./static_mentions.json");
   const poisSent = require("./static_poi_sent.json");
   const poisSentiment = [];
+  const dateWise = [];
   const pois = require("./static_pois.json");
   const sentiment = require("./static_sentiment.json");
 
@@ -51,6 +52,13 @@ export default function CorpusStats(props) {
       positive: poisSent[key]["Positive"],
       neutral: poisSent[key]["Neutral"],
       negative: poisSent[key]["Negative"],
+    });
+  }
+
+  for (let key in dates) {
+    dateWise.push({
+      "name": key,
+      "value": dates[key]
     });
   }
 
@@ -172,7 +180,7 @@ export default function CorpusStats(props) {
               <LineChart
                 width={1000}
                 height={300}
-                data={dates}
+                data={dateWise}
                 margin={{
                   top: 5,
                   right: 30,
