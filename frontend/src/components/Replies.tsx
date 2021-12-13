@@ -31,7 +31,7 @@ export default function Replies(props: any) {
     if (!first) {
       setSpinner(true);
       const url = new URL(
-        "http://localhost:9999/replies?tweet_id=" + props.tweet_id
+        "http://13.59.1.184:9999/replies?tweet_id=" + props.tweet_id
       );
       fetch(url.toString(), {
         method: "GET",

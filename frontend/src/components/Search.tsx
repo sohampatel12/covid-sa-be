@@ -29,7 +29,7 @@ export default function Search(props: any) {
       setSpinner(false);
       console.log("Enter some details");
     } else {
-      const url = new URL("http://localhost:9999/api");
+      const url = new URL("http://13.59.1.184:9999/api");
       const headers = {
         'Content-Type': 'application/json'
       }
